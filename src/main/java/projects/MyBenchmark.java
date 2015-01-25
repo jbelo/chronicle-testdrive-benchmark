@@ -35,6 +35,10 @@ import net.openhft.chronicle.Chronicle;
 import net.openhft.chronicle.ChronicleQueueBuilder;
 import net.openhft.chronicle.ExcerptAppender;
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +66,7 @@ public class MyBenchmark {
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     @Warmup(iterations = 2, time = 1, timeUnit = TimeUnit.SECONDS)
-    @Measurement(iterations = 2, time = 1, timeUnit = TimeUnit.SECONDS)
+    @Measurement(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
     @Fork(1)
     public void testMethod() throws IOException {
@@ -72,5 +76,13 @@ public class MyBenchmark {
         excerpt.writeBytes(MESSAGE);
         excerpt.finish();
         excerpt.close();
+    }
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(MyBenchmark.class.getSimpleName())
+                .build();
+
+        new Runner(opt).run();
     }
 }
